@@ -6,12 +6,13 @@ interface TreeProps {
 }
 
 export function Tree({ data }: TreeProps) {
+  
   return (
     <div>
       {data.map((treeData) => {
         return (
           <div key={treeData.id}>
-            <CheckboxParent treeData={treeData} initialValue={false} initialDataTree={{ [treeData.id]: {} }} />
+            <CheckboxParent treeData={treeData} initialValue={false} />
           </div>
         )
       })}

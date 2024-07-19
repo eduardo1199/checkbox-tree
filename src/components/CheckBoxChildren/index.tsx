@@ -3,23 +3,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { TreeData } from '../../App';
 import { CheckboxParent } from '../CheckboxParent';
 
-interface CheckBoxMarked {
-  [id: string]: boolean;
-}
-
-interface CheckBoxTree {
-  [id: string]: CheckBoxMarked;
-}
-
 interface CheckboxChildrenProps {
   data: TreeData
   onChangeCheckBox: (marker: boolean, id: string) => void;
   id: string;
   checked: boolean;
-  initialDataTree: CheckBoxTree
 }
 
-export function CheckboxChildren({ data, onChangeCheckBox, id, checked, initialDataTree }: CheckboxChildrenProps){
+export function CheckboxChildren({ data, onChangeCheckBox, id, checked }: CheckboxChildrenProps){
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChangeCheckBox(event.target.checked, id)
   };
@@ -32,7 +23,6 @@ export function CheckboxChildren({ data, onChangeCheckBox, id, checked, initialD
         <CheckboxParent 
           treeData={data} 
           initialValue={checked} 
-          initialDataTree={initialDataTree}
         /> 
       : 
         <FormControlLabel

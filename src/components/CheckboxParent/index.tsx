@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 interface CheckboxParentProps {
   treeData: TreeData
   initialValue: boolean
-  initialDataTree: CheckBoxTree
 }
 
 interface CheckBoxMarked {
@@ -19,10 +18,8 @@ interface CheckBoxTree {
   [id: string]: CheckBoxMarked;
 }
 
-export function CheckboxParent({ treeData, initialValue, initialDataTree }: CheckboxParentProps){
-  const [checkBoxTree, setCheckBoxTree] = useState<CheckBoxTree>(initialDataTree); 
-
-  console.log(initialDataTree)
+export function CheckboxParent({ treeData, initialValue }: CheckboxParentProps){
+  const [checkBoxTree, setCheckBoxTree] = useState<CheckBoxTree>({ [treeData.id]: {} }); 
 
   const handleChangeAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     const changeAllChecked = {} as CheckBoxMarked
@@ -59,7 +56,7 @@ export function CheckboxParent({ treeData, initialValue, initialDataTree }: Chec
   })
 
   useEffect(() => {
-    const initialState = initialDataTree
+    const initialState = { [treeData.id]: {} } as CheckBoxTree
 
     const valuesChildrenTree = Object.entries(treeData.children)
 
@@ -68,7 +65,7 @@ export function CheckboxParent({ treeData, initialValue, initialDataTree }: Chec
     })
  
     setCheckBoxTree(initialState) 
-  }, [treeData, initialValue, initialDataTree])
+  }, [treeData, initialValue])
 
   return (
     <div>
@@ -93,7 +90,6 @@ export function CheckboxParent({ treeData, initialValue, initialDataTree }: Chec
                 checked={checkBoxTree[treeData.id][value.id]}
                 onChangeCheckBox={handleChangeMarkedChildren}
                 id={value.id} 
-                initialDataTree={checkBoxTree}
               />
             )
           })}
