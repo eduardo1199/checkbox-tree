@@ -1,19 +1,27 @@
 import { TreeData } from "../../App";
-import { CheckboxParent } from "../CheckboxParent";
+import { TreeItemProvider } from "../../Context/TreeItemContext";
+import { TreeItem } from "../TreeItem";
 
 interface TreeProps {
   data: TreeData[]
 }
 
-export function Tree({ data }: TreeProps) {
-  
+export interface TreeItemType {
+  [id: string]: boolean
+}
+
+export function Tree({ data }: TreeProps) {  
   return (
     <div>
       {data.map((treeData) => {
         return (
-          <div key={treeData.id}>
-            <CheckboxParent treeData={treeData} initialValue={false} />
-          </div>
+          <TreeItemProvider key={treeData.id}>
+            <TreeItem 
+              treeData={treeData} 
+              initialChecked={false}
+              treeDataParent={{} as TreeData}
+            />
+          </TreeItemProvider>
         )
       })}
     </div>
