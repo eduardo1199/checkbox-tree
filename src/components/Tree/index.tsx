@@ -18,8 +18,6 @@ export function Tree({ data }: TreeProps) {
           <TreeItemProvider key={treeData.id}>
             <TreeItem 
               treeData={treeData} 
-              initialChecked={false}
-              treeDataParent={{} as TreeData}
             />
           </TreeItemProvider>
         )

@@ -1,11 +1,12 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useCallback, useState } from "react";
 import { TreeItemType } from "../components/Tree";
 import { TreeData } from "../App";
 
 interface TreeItemContextData {
   treeItems: TreeItemType
-  onCheckedItem: (checked: boolean, treeData: TreeData, treeDataParent: TreeData) => void;
-  handleAddItemsStorage: (treeItem: string) => void;
+  handleAddItems: (treeItem: TreeData, checked: boolean) => void;
+  saveInStorage:  (treeItemId: string, checked: boolean) => void;
+  loadItemsToStorage: (treeItemId: string) => void;
 }
 
 export const TreeItemContext = createContext({} as TreeItemContextData)
@@ -17,47 +18,34 @@ interface TreeItemProviderProps {
 export function TreeItemProvider({ children }: TreeItemProviderProps) {
   const [treeItems, setTreeItems] = useState<TreeItemType>({});
 
-  function saveInStorage(idItem: string, checked: boolean) {
+  function saveInStorage(treeItemId: string, checked: boolean) {
     if(checked) {
-      window.localStorage.setItem(idItem, idItem)
+      window.localStorage.setItem(treeItemId, treeItemId)
     } else {
-      window.localStorage.removeItem(idItem)
+      window.localStorage.removeItem(treeItemId)
     }
   }
 
-  function mountItemsCheck(items: TreeItemType, treeData: TreeData, checked: boolean) {
-    Object.entries(treeData.children).forEach(([_, itemChildren]) => {
-      items[itemChildren.id] = checked;
-      saveInStorage(itemChildren.id, checked)
+  function handleChangeToggleChildren(items: TreeItemType, treeData: TreeData, checked: boolean): TreeItemType {
+    if(Object.values(treeData.children).length > 0) {
+      Object.entries(treeData.children).forEach(([_, value]) => {
+        items[value.id] = checked
+        saveInStorage(value.id, checked)
 
-      if(Object.values(itemChildren.children).length > 0) {
-        items = mountItemsCheck(items, itemChildren, checked)
-      }
-    })
+        items = handleChangeToggleChildren(items, value, checked)
+      })
+    }
 
     return items
   }
 
-  
-  function handleCheckedItem(checked: boolean, treeData: TreeData, treeDataParent: TreeData): void {
-    const items = { ...treeItems }
 
-    items[treeData.id] = checked
-    saveInStorage(treeData.id, checked)
-
-    if(!checked) {
-      items[treeDataParent.id] = !checked
-      saveInStorage(treeDataParent.id, checked)
-    }
-
-    const updateItems = mountItemsCheck(items, treeData, checked)
-
-    setTreeItems(updateItems)
-  }
-
-  function handleAddItemsStorage(treeItemId: string) {
+  function handleAddItems(treeData: TreeData, checked: boolean): void {
     setTreeItems((state) => {
-      state[treeItemId] = Boolean(window.localStorage.getItem(treeItemId))
+      state[treeData.id] = checked
+      saveInStorage(treeData.id, checked)
+
+      state = handleChangeToggleChildren(state, treeData, checked)
 
       return {
         ...state,
@@ -65,9 +53,21 @@ export function TreeItemProvider({ children }: TreeItemProviderProps) {
     })
   }
 
+  const loadItemsToStorage = useCallback((treeItemId: string) => {
+    if(window.localStorage.getItem(treeItemId)) {
+      setTreeItems((state) => {
+        state[treeItemId] = Boolean(window.localStorage.getItem(treeItemId))
+  
+        return {
+          ...state,
+        }
+      })
+    }
+  }, [])
+
 
   return (
-    <TreeItemContext.Provider value={{ treeItems, onCheckedItem: handleCheckedItem, handleAddItemsStorage }}>
+    <TreeItemContext.Provider value={{ treeItems, handleAddItems, loadItemsToStorage, saveInStorage }}>
       {children}
     </TreeItemContext.Provider>
   )

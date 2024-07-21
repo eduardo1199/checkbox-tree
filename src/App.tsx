@@ -56,7 +56,7 @@ const fakeData = {
 }
 
 function App() {
-  const dataTree: TreeData[]  = Object.entries(fakeData).map(([_, value]) => {
+  const dataTree: TreeData[]  = Object.entries(data).map(([_, value]) => {
     return value
   })
 
