@@ -41,12 +41,12 @@ const fakeData = {
             "children": {},
             "level": 3
           },
-          "1": {
+         /*  "1": {
             "id": "d3865a91-c4e3-4ee7-b73e-5c2c7d428091",
             "name": "Wladyslaw Stanislaw Ivar",
             "children": {},
             "level": 3
-          },
+          }, */
         },
         "level": 2
       },

@@ -9,9 +9,10 @@ import { Accordion, AccordionDetails, AccordionSummary } from './styles';
 
 interface CheckboxParentProps {
   treeData: TreeData
+  treeParentData: TreeData
 }
 
-export function TreeItem({ treeData }: CheckboxParentProps){
+export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
   const { treeItems, loadItemsToStorage, handleAddItems } = useContext(TreeItemContext)
 
   const ref = useRef<HTMLInputElement | null>(null)
@@ -31,6 +32,8 @@ export function TreeItem({ treeData }: CheckboxParentProps){
     return amountChildrenChecked
   }, 0), [childrenValuesTree, treeItems])
 
+  const isIndeterminate = hasChildren && !!amountChildrenChecked && amountChildrenChecked < childrenValuesTree.length
+
   function handleChangeExpand(_: React.SyntheticEvent, isExpanded: boolean) {
     if(hasChildren) {
       setExpanded(isExpanded);
@@ -38,7 +41,7 @@ export function TreeItem({ treeData }: CheckboxParentProps){
   }
 
   function handleChecked(event: React.ChangeEvent<HTMLInputElement>) {
-    handleAddItems(treeData, event.target.checked)
+    handleAddItems(treeData, event.target.checked, treeParentData.id)
     setChecked(event.target.checked)
 
 
@@ -81,7 +84,7 @@ export function TreeItem({ treeData }: CheckboxParentProps){
               <Checkbox 
                 checked={checked} 
                 onChange={handleChecked} 
-                indeterminate={hasChildren && !!amountChildrenChecked && amountChildrenChecked < childrenValuesTree.length}
+                indeterminate={isIndeterminate}
                 color="info"
               />
             }
@@ -95,6 +98,7 @@ export function TreeItem({ treeData }: CheckboxParentProps){
                 return (     
                   <TreeItem 
                     treeData={value} 
+                    treeParentData={treeData}
                     key={value.id}
                   />
                 )

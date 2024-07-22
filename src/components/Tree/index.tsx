@@ -18,6 +18,7 @@ export function Tree({ data }: TreeProps) {
           <TreeItemProvider key={treeData.id}>
             <TreeItem 
               treeData={treeData} 
+              treeParentData={{} as TreeData}
             />
           </TreeItemProvider>
         )
