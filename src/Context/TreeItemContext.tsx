@@ -4,7 +4,7 @@ import { TreeData } from "../App";
 
 interface TreeItemContextData {
   treeItems: TreeItemType
-  handleAddItems: (treeItem: TreeData, checked: boolean) => void;
+  handleAddItems: (treeItem: TreeData, checked: boolean, treeItemIdParent?: string) => void;
   saveInStorage:  (treeItemId: string, checked: boolean) => void;
   loadItemsToStorage: (treeItemId: string) => void;
 }
@@ -40,10 +40,15 @@ export function TreeItemProvider({ children }: TreeItemProviderProps) {
   }
 
 
-  function handleAddItems(treeData: TreeData, checked: boolean): void {
+  function handleAddItems(treeData: TreeData, checked: boolean, treeItemIdParent?: string): void {
     setTreeItems((state) => {
       state[treeData.id] = checked
       saveInStorage(treeData.id, checked)
+
+      if(treeItemIdParent) {
+        state[treeItemIdParent] = checked
+        saveInStorage(treeItemIdParent, checked)
+      }
 
       state = handleChangeToggleChildren(state, treeData, checked)
 

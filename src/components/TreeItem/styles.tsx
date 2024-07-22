@@ -24,7 +24,7 @@ export const AccordionSummary = styled((props: AccordionSummaryProps) => (
     {...props}
   />
 ))(() => ({
-  background: '#94a6eb',
+  background: '#a2b7c9',
   borderRadius: '8px',
   marginTop: '1rem',
 

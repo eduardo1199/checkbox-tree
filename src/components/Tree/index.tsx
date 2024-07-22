@@ -1,5 +1,5 @@
 import { TreeData } from "../../App";
-import { TreeItemProvider } from "../../Context/TreeItemContext";
+import { TreeItemProvider } from "../../context/TreeItemContext";
 import { TreeItem } from "../TreeItem";
 
 interface TreeProps {

@@ -2,8 +2,8 @@ import {  Box, Checkbox, FormControlLabel, Typography } from '@mui/material';
 
 
 import { TreeData } from '../../App';
-import React, {  useContext, useEffect, useMemo, useState } from 'react';
-import { TreeItemContext } from '../../Context/TreeItemContext';
+import React, {  useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { TreeItemContext } from '../../context/TreeItemContext';
 import { ExpandMore } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary } from './styles';
 
@@ -13,6 +13,8 @@ interface CheckboxParentProps {
 
 export function TreeItem({ treeData }: CheckboxParentProps){
   const { treeItems, loadItemsToStorage, handleAddItems } = useContext(TreeItemContext)
+
+  const ref = useRef<HTMLInputElement | null>(null)
 
   const [expanded, setExpanded] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(treeItems[treeData.id] ?? false);
@@ -29,15 +31,28 @@ export function TreeItem({ treeData }: CheckboxParentProps){
     return amountChildrenChecked
   }, 0), [childrenValuesTree, treeItems])
 
-  const handleChangeExpand = (_: React.SyntheticEvent, isExpanded: boolean) => {
+  function handleChangeExpand(_: React.SyntheticEvent, isExpanded: boolean) {
     if(hasChildren) {
       setExpanded(isExpanded);
     }
-  };
+  }
 
   function handleChecked(event: React.ChangeEvent<HTMLInputElement>) {
     handleAddItems(treeData, event.target.checked)
     setChecked(event.target.checked)
+
+
+    const position = ref.current?.getBoundingClientRect().top ?? 0
+    const scrollTop = window.scrollY
+   
+    window.scroll({
+      top: scrollTop + position - (window.innerHeight / 2),
+      behavior: "smooth",
+    })
+  }
+
+  function handleClick(event: React.MouseEvent) {
+    event.stopPropagation();
   }
 
   useEffect(() => {
@@ -48,10 +63,6 @@ export function TreeItem({ treeData }: CheckboxParentProps){
     setChecked(treeItems[treeData.id] ?? false)
   }, [treeItems, treeData.id])
 
-  const handleClick = (event: any) => {
-    event.stopPropagation();
-  };
-
   return (
     <div>
       <Accordion 
@@ -61,29 +72,27 @@ export function TreeItem({ treeData }: CheckboxParentProps){
       >
         <AccordionSummary 
           expandIcon={hasChildren && <ExpandMore />} 
-          onClick={handleClick}
-        >
-          <div>
-            <FormControlLabel
-              label={<Typography variant='h6' style={{ color: 'white' }}>{treeData.name}</Typography>}
-              onClick={handleClick}
-              control={
-                <Checkbox 
-                  checked={checked} 
-                  onChange={handleChecked} 
-                  indeterminate={hasChildren && !!amountChildrenChecked && amountChildrenChecked < childrenValuesTree.length}
-                  color="primary"
-                />
-              }
-            />
-          </div>
+        >  
+          <FormControlLabel
+            label={<Typography variant='h6' style={{ color: 'white' }}>{treeData.name}</Typography>}
+            onClick={handleClick}
+            inputRef={ref}
+            control={
+              <Checkbox 
+                checked={checked} 
+                onChange={handleChecked} 
+                indeterminate={hasChildren && !!amountChildrenChecked && amountChildrenChecked < childrenValuesTree.length}
+                color="info"
+              />
+            }
+          />
         </AccordionSummary>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, gap: '1rem' }}>
           {childrenValuesTree.length > 0 && (
             <AccordionDetails>
               {childrenValuesTree.map((value) => {
-                return (    
+                return (     
                   <TreeItem 
                     treeData={value} 
                     key={value.id}
