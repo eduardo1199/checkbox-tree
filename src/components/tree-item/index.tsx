@@ -55,6 +55,7 @@ export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
           isChecked={checked} 
           onCheckElement={handleChecked}
           isIndeterminate={isIndeterminate}
+          data-testid="check-box"
         >
           {treeData.name}
         </Checkbox>

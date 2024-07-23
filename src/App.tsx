@@ -1,7 +1,6 @@
 import { Tree } from "./components/tree"
 
 import { data } from './constants'
-import { TreeItemProvider } from "./context/TreeItemContext"
 
 import './style'
 
