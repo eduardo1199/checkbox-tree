@@ -1,6 +1,7 @@
-import { Tree } from "./components/Tree"
+import { Tree } from "./components/tree"
 
 import { data } from './constants'
+import { TreeItemProvider } from "./context/TreeItemContext"
 
 import './style'
 
@@ -20,7 +21,7 @@ const fakeData = {
     "name": "Lars Pablo",
     "children": {
       "0": {
-        "id": "97cd3a19-0f1c-4248-a84c-a1f5a0093a89",
+        "id": "ADADAWDASDA-0f1c-4248-a84c-a1f5a0093a89",
         "name": "Luis F. Doris",
         "children": {},
         "level": 2
@@ -41,10 +42,17 @@ const fakeData = {
             "children": {},
             "level": 3
           },
-         /*  "1": {
+          /* "1": {
             "id": "d3865a91-c4e3-4ee7-b73e-5c2c7d428091",
             "name": "Wladyslaw Stanislaw Ivar",
-            "children": {},
+            "children": {
+              "0": {
+                "id": "3bfdf6e6-8a30-21002-892d-8d5773ee6bf5",
+                "name": "Eduardo Soares",
+                "children": {},
+                "level": 4
+              },
+            },
             "level": 3
           }, */
         },
@@ -61,9 +69,9 @@ function App() {
   })
 
   return (
-    <div>
+    <TreeItemProvider>
       <Tree data={dataTree} />
-    </div>
+    </TreeItemProvider>
   )
 }
 

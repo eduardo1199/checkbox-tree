@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useCallback, useState } from "react";
-import { TreeItemType } from "../components/Tree";
+import { TreeItemType } from "../components/tree";
 import { TreeData } from "../App";
 
 interface TreeItemContextData {
@@ -70,9 +70,14 @@ export function TreeItemProvider({ children }: TreeItemProviderProps) {
     }
   }, [])
 
-
   return (
-    <TreeItemContext.Provider value={{ treeItems, handleAddItems, loadItemsToStorage, saveInStorage }}>
+    <TreeItemContext.Provider 
+      value={{ 
+        treeItems, 
+        handleAddItems, 
+        loadItemsToStorage, 
+        saveInStorage,
+      }}>
       {children}
     </TreeItemContext.Provider>
   )
