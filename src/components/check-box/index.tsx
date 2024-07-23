@@ -25,7 +25,11 @@ export function Checkbox({ children, isChecked, onCheckElement, isIndeterminate 
   }
 
   return (
-    <CheckboxContainer checked={isChecked ?? false} onClick={handleCheckboxChange} data-testid="check-box">
+    <CheckboxContainer 
+      checked={isChecked ?? false} 
+      onClick={handleCheckboxChange} 
+      data-testid="check-box"
+    >
       <HiddenCheckbox onChange={handleCheckboxChange} checked={isChecked} ref={ref} />
       {isIndeterminate ? 
         <StyledCheckboxIndetermination 

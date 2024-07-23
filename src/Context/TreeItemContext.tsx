@@ -7,6 +7,7 @@ interface TreeItemContextData {
   handleAddItems: (treeItem: TreeData, checked: boolean, treeItemIdParent?: string) => void;
   saveInStorage:  (treeItemId: string, checked: boolean) => void;
   loadItemsToStorage: (treeItemId: string) => void;
+  checkIsIndeterminate: (treeData: TreeData[]) => boolean;
 }
 
 export const TreeItemContext = createContext({} as TreeItemContextData)
@@ -58,7 +59,7 @@ export function TreeItemProvider({ children }: TreeItemProviderProps) {
     })
   }
 
-  const loadItemsToStorage = useCallback((treeItemId: string) => {
+  const loadItemsToStorage = useCallback((treeItemId: string): void => {
     if(window.localStorage.getItem(treeItemId)) {
       setTreeItems((state) => {
         state[treeItemId] = Boolean(window.localStorage.getItem(treeItemId))
@@ -70,6 +71,28 @@ export function TreeItemProvider({ children }: TreeItemProviderProps) {
     }
   }, [])
 
+  function checkIsIndeterminate(treeData: TreeData[]): boolean {
+    const hasChildren = treeData.length > 0;
+
+    const amountChildrenChecked = treeData.reduce((amountChildrenChecked, treeChildren) => {
+      if(Boolean(treeItems[treeChildren.id]) === true) {
+        amountChildrenChecked++
+      }
+  
+      return amountChildrenChecked
+    }, 0)
+  
+    let isIndeterminate = hasChildren && !!amountChildrenChecked && amountChildrenChecked < treeData.length
+
+    treeData.forEach((item) => {
+      if(Object.values(item.children).length > 0) {
+        isIndeterminate = isIndeterminate  || checkIsIndeterminate(Object.values(item.children))
+      }
+    })
+
+    return isIndeterminate
+  }
+
   return (
     <TreeItemContext.Provider 
       value={{ 
@@ -77,6 +100,7 @@ export function TreeItemProvider({ children }: TreeItemProviderProps) {
         handleAddItems, 
         loadItemsToStorage, 
         saveInStorage,
+        checkIsIndeterminate
       }}>
       {children}
     </TreeItemContext.Provider>

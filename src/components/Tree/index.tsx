@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { TreeData } from "../../App";
 import { TreeItemContext } from "../../context/TreeItemContext";
 import { TreeItem } from "../tree-item";
@@ -24,7 +24,6 @@ export function Tree({ data }: TreeProps) {
       })
     }
   }, [])
-  
   
   useEffect(() => {
     data.forEach((treeItem) => {

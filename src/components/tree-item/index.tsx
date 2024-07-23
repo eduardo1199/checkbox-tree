@@ -1,7 +1,7 @@
 import { Checkbox } from '../check-box'
 
 import { TreeData } from '../../App';
-import React, {  useContext, useEffect, useMemo, useState } from 'react';
+import React, {  useContext, useEffect, useState } from 'react';
 import { TreeItemContext } from '../../context/TreeItemContext';
 import { Accordion } from '../accordion';
 interface CheckboxParentProps {
@@ -10,7 +10,7 @@ interface CheckboxParentProps {
 }
 
 export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
-  const { treeItems, handleAddItems } = useContext(TreeItemContext)
+  const { treeItems, handleAddItems, checkIsIndeterminate } = useContext(TreeItemContext)
 
   const [checked, setChecked] = useState<boolean>(treeItems[treeData.id] ?? false);
   const [expanded, setExpanded] = useState<boolean>(false)
@@ -19,19 +19,7 @@ export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
 
   const hasChildren = childrenValuesTree.length > 0;
 
-  const amountChildrenChecked = useMemo(() => childrenValuesTree.reduce((amountChildrenChecked, treeChildren) => {
-    if(Boolean(treeItems[treeChildren.id]) === true) {
-      amountChildrenChecked++
-    }
-
-    return amountChildrenChecked
-  }, 0), [childrenValuesTree, treeItems])
-
-  const isIndeterminate = hasChildren && !!amountChildrenChecked && amountChildrenChecked < childrenValuesTree.length
-
   function handleChecked(checked: boolean, position: number) {
-    
-
     handleAddItems(treeData,checked, treeParentData.id)
     setChecked(checked)
 
@@ -46,6 +34,8 @@ export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
   function handleClick(event: React.MouseEvent) {
     event.stopPropagation();
   }
+
+  const isIndeterminate = checkIsIndeterminate(childrenValuesTree)
 
   useEffect(() => {
     setChecked(treeItems[treeData.id] ?? false)

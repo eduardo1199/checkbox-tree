@@ -25,6 +25,7 @@ export const HiddenCheckbox = styled.input.attrs({type: 'checkbox'})`
 
 export const Text = styled.label<TextProps>`
   color: ${props => props.checked ? '#d1f08a' : '#555'};
+  cursor: pointer;
 `;
 
 export const StyledCheckbox = styled.label<StyledCheckboxProps>`
