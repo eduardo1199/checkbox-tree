@@ -10,7 +10,7 @@ interface CheckboxParentProps {
 }
 
 export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
-  const { treeItems, handleAddItems, checkIsIndeterminate } = useContext(TreeItemContext)
+  const { treeItems, handleAddItems, checkIsIndeterminate, loadItemsToStorage } = useContext(TreeItemContext)
 
   const [checked, setChecked] = useState<boolean>(treeItems[treeData.id] ?? false);
   const [expanded, setExpanded] = useState<boolean>(false)
@@ -40,6 +40,10 @@ export function TreeItem({ treeData, treeParentData }: CheckboxParentProps){
   useEffect(() => {
     setChecked(treeItems[treeData.id] ?? false)
   }, [treeItems, treeData.id])
+
+  useEffect(() => {
+    loadItemsToStorage(treeData.id)
+  }, [])
 
   return (
     <Accordion 

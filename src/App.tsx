@@ -21,9 +21,7 @@ function App() {
   })
 
   return (
-    <TreeItemProvider>
-      <Tree data={dataTree} />
-    </TreeItemProvider>
+    <Tree data={dataTree} />
   )
 }
 
